@@ -1,0 +1,28 @@
+/* 
+    color palette:
+    #51E08A : Buttons bG
+    #3B4877 : input BG & select
+    #000C36: main BG
+    #FFFFFF: text color
+*/
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto Slab", serif;
+}
+
+main, header {
+    width: 500px;
+    margin: 0 auto;
+    position: relative;
+    background-color: #000C36;
+}
+
+header img {
+    width: 150px;
+    display: block;
+    margin: 0 auto;
+    /* padding-top: 100px; */
+    padding: 100px 0 30px 0;
+}
