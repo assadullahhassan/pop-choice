@@ -10,19 +10,112 @@ html, body {
     margin: 0;
     padding: 0;
     font-family: "Roboto Slab", serif;
+    color: white;
 }
 
 main, header {
-    width: 500px;
+    width: 400px;
     margin: 0 auto;
     position: relative;
     background-color: #000C36;
 }
 
-header img {
+main {
+    height: 100vh;
+}
+
+header .first-form-logo {
     width: 150px;
     display: block;
     margin: 0 auto;
     /* padding-top: 100px; */
-    padding: 100px 0 30px 0;
+    padding: 150px 0 0 0;
+}
+
+header .second-form-logo {
+    width: 100px;
+    display: block;
+    margin: 0 auto;
+    /* padding-top: 100px; */
+    padding: 20px 0 0 0;
+}
+
+.first-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 2em;
+}
+
+.first-form input {
+    height: 50px;
+    border-radius: 6px;
+    background-color: #3B4877;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 1.3em;
+}
+
+.first-form input::placeholder {
+    color: #000C36;
+}
+
+.first-form input:focus {
+    border: none;
+}
+
+.first-form button {
+    padding: 10px;
+    font-size: 2em;
+    font-weight: bolder;
+    border-radius: 6px;
+    border: none;
+    background-color: #51E08A ;
+    color: #000C36;
+    cursor: pointer;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    margin-top: 2px;
+}
+
+
+.second-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 2em;
+}
+
+.second-form textarea {
+    width: 100%;
+    height: 60px;
+    border-radius: 6px;
+    background-color: #3B4877;
+    border: none;
+}
+
+span {
+    background-color: #3B4877;
+    padding: .25em .5em;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.space {
+    padding-top: .6em;
+}
+
+.second-form button {
+    padding: 10px;
+    font-size: 2em;
+    font-weight: bolder;
+    border-radius: 6px;
+    border: none;
+    background-color: #51E08A ;
+    color: #000C36;
+    cursor: pointer;
 }
