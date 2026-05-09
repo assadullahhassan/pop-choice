@@ -1,6 +1,7 @@
 {
   "name": "pop-choice",
   "description": "Movie AI App",
+  "type": "module",
   "scripts": {
     "start": "vite",
     "dev": "vite",
