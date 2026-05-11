@@ -19,8 +19,8 @@
                 
                 <form id="first-form">
                  <div class="first-form">
-                    <input type="number" name="peoplenum" max="5" placeholder="How many people?">
-                    <input type="text" name="time" placeholder="How much time do you have?">
+                    <input type="number" name="peoplenum" max="5" min="1" placeholder="How many people?" required>
+                    <input type="text" name="time" placeholder="How much time do you have?" required>
                     <button type="submit">Start</button>
                   </div>
                 </form>
@@ -30,13 +30,13 @@
                      <header>
                     <img class="second-form-logo" src="./assets/image/logo.png" alt="popcorn">
                 </header>
-                <h1>1</h1>
+                <h1 id="person-count">1</h1>
 
                 <form id="second-form">
                  <div class="second-form">
                     <div>
                         <label>What's your favorite movie and why?</label>
-                        <textarea class="space" name="favorite_movie"></textarea>
+                        <textarea class="space" name="favorite_movie" required></textarea>
                     </div>
 
                     <div>
@@ -56,12 +56,11 @@
                             <span id="othermood-btn" data-value="Inspiring">Inspiring</span>
                             <span id="othermood-btn" data-value="Scary">Scary</span>
                         </div>
-                        
                     </div>
 
                     <div>
                         <label>Which famous film person would you love to be stranded on an island with and why?</label> <br>
-                        <textarea class="space" name="famous_person"></textarea>
+                        <textarea class="space" name="famous_person" required></textarea>
                     </div>
 
                     <button type="submit">Next</button>
@@ -71,15 +70,10 @@
                 </div>
             </div>
 
-                <!-- <div class="results" id="results">
-                    <h1>The Martian (2015)</h1>
-                    <img src="./assets/image/the-martian.jpg" alt="The Martian poster">
-                    <p>When astronauts blast off from the planet Mars, they leave behind Mark Watney (Matt Damon), </p>
-                    <div class="btn">
-                       <button class="btn-next">Next movie</button>
-                    </div>
-                </div> -->
+            <div class="results" id="results">
+                    
+            </div>
         </main>
-        <script src="./index.js"></script>
+        <script src="./index.js" type="module"></script>
     </body>
 </html> 
