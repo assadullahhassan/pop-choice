@@ -9,3 +9,8 @@ export async function getRecommendation(userData, watchLength) {
         });
     return response.json();
 }
+
+export async function getPoster(tvSeriesId) {
+    const response = await fetch(`http://localhost:3000/api/poster?tvSeriesId=${tvSeriesId}`);
+    return response.json();
+}

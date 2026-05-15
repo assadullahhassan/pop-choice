@@ -1,5 +1,6 @@
 // import { openai, supabase } from './config.js';
-import { getRecommendation } from "./apicall.js";
+// import { get } from "http";
+import { getRecommendation, getPoster } from "./apicall.js";
 
 const firstForm = document.querySelector('#first-form');
 const secondForm = document.querySelector('#second-form');
@@ -15,6 +16,7 @@ let person = 1;
 let userDataArray = [];
 let initialPerson = 1;
 let watchLength = '';
+const tvSeriesId = 4614;
 
 let resultsHTML = `
             <p>Based on your answers, we recommend</p>
@@ -33,6 +35,7 @@ firstForm.addEventListener('submit', async (e) => {
     personCount.textContent = initialPerson;
     firstFormContainer.style.display = 'none';
     secondFormContainer.style.display = 'block';
+    getPosterImg();
 });
 
 secondForm.addEventListener('submit', async (e) => {
@@ -98,4 +101,38 @@ otherMoodButtons.forEach(button => {
 function clearMoodSelection() {
     moodButtons.forEach(btn => btn.classList.remove('selected'));
     otherMoodButtons.forEach(btn => btn.classList.remove('selected'));
+}
+
+function getPosterImg(tvSeriesId) {
+//    const data =  getPoster(tvSeriesId);
+//    console.log(data);
+const API_KEY = '';
+const MOVIE_TITLE = 'Inception';
+
+// 2. Define TMDB endpoint URLs
+const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(MOVIE_TITLE)}`;
+const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+
+
+fetch(url)
+  .then(response => response.json())
+  .then(data => {
+  
+    if (data.results && data.results.length > 0) {
+      const firstMovie = data.results[0];
+      const posterPath = firstMovie.poster_path;
+
+      if (posterPath) {
+        const fullPosterUrl = `${imageBaseUrl}${posterPath}`;
+        console.log(`Movie Title: ${firstMovie.title}`);
+        console.log(`Poster URL: ${fullPosterUrl}`);
+      } else {
+        console.log(`No poster available for: ${firstMovie.title}`);
+      }
+    } else {
+      console.log('No movies found matching that title.');
+    }
+  })
+  .catch(error => console.error('Error fetching data:', error));
+
 }
