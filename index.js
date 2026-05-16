@@ -16,16 +16,7 @@ let person = 1;
 let userDataArray = [];
 let initialPerson = 1;
 let watchLength = '';
-const tvSeriesId = 4614;
 
-let resultsHTML = `
-            <p>Based on your answers, we recommend</p>
-            <h1>The Martian (2015)</h1>
-                            <img src="./assets/image/the-martian.jpg" alt="The Martian poster">
-                            <p>When astronauts blast off from the planet Mars, they leave behind Mark Watney (Matt Damon), </p>
-                            <div class="btn">
-            <button class="btn-next">Next movie</button>
-                </div>`;
 
 firstForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -35,7 +26,7 @@ firstForm.addEventListener('submit', async (e) => {
     personCount.textContent = initialPerson;
     firstFormContainer.style.display = 'none';
     secondFormContainer.style.display = 'block';
-    getPosterImg();
+    // getPosterImg();
 });
 
 secondForm.addEventListener('submit', async (e) => {
@@ -54,8 +45,10 @@ secondForm.addEventListener('submit', async (e) => {
         personCount.textContent = initialPerson;
         if (initialPerson > person) {
             secondFormContainer.style.display = 'none';
-            const recommendation = await getRecommendation(userDataArray, watchLength);
-            resultsSection.innerHTML = resultsHTML;
+            const recommendation = await getRecommendation(userData, watchLength);
+        console.log("Received recommendation:", recommendation);
+        const parsedRecommendation = JSON.parse(recommendation);
+        getPosterImg(parsedRecommendation.title, parsedRecommendation.description);
         }
     } else {
         const formData = new FormData(secondForm);
@@ -63,14 +56,11 @@ secondForm.addEventListener('submit', async (e) => {
         userData.famous_person = formData.get('famous_person');
         secondFormContainer.style.display = 'none';
             // resultsSection.innerHTML = resultsHTML;
-        
 
         const recommendation = await getRecommendation(userData, watchLength);
-        resultsSection.innerHTML = `
-            <p>Based on your answers, we recommend</p>
-            <h1>${recommendation.title}</h1>
-            <p>${recommendation.description}</p>
-        `;
+        console.log("Received recommendation:", recommendation);
+        const parsedRecommendation = JSON.parse(recommendation);
+         getPosterImg(parsedRecommendation.title, parsedRecommendation.description);
     }
 });
 
@@ -103,18 +93,15 @@ function clearMoodSelection() {
     otherMoodButtons.forEach(btn => btn.classList.remove('selected'));
 }
 
-function getPosterImg(tvSeriesId) {
-//    const data =  getPoster(tvSeriesId);
-//    console.log(data);
-const API_KEY = '';
-const MOVIE_TITLE = 'Inception';
+ function getPosterImg(title, description) {
 
-// 2. Define TMDB endpoint URLs
-const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(MOVIE_TITLE)}`;
+const API_KEY = '';
+
+const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(title)}`;
 const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 
 
-fetch(url)
+ fetch(url)
   .then(response => response.json())
   .then(data => {
   
@@ -126,6 +113,8 @@ fetch(url)
         const fullPosterUrl = `${imageBaseUrl}${posterPath}`;
         console.log(`Movie Title: ${firstMovie.title}`);
         console.log(`Poster URL: ${fullPosterUrl}`);
+        // return fullPosterUrl;
+         renderResults(title, description, fullPosterUrl);
       } else {
         console.log(`No poster available for: ${firstMovie.title}`);
       }
@@ -135,4 +124,16 @@ fetch(url)
   })
   .catch(error => console.error('Error fetching data:', error));
 
+}
+
+function renderResults(title, description, posterUrl) {
+    resultsSection.innerHTML = `
+            <p>Based on your answers, we recommend</p>
+            <h1>${title}</h1>
+             <img src="${posterUrl}" alt="${title} poster">
+             <p>${description}</p>
+             <div class="btn">
+            <button class="btn-next">Next movie</button>
+                </div>
+        `;
 }

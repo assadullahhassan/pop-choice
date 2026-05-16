@@ -1,7 +1,9 @@
 import { openai, supabase } from './config.js';
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { promises as fs } from 'fs';
-import path from 'path';
+import path, { format } from 'path';
+import { schemaResponse } from './schema-response.js';
+import { text } from 'stream/consumers';
 
 async function splitDocument() {
   const text = await getMovies();
@@ -18,7 +20,7 @@ export async function createAndStoreEmbeddings() {
   const data = await Promise.all(
     chunkData.map(async (chunk) => {
       const embeddingResponse = await openai.embeddings.create({
-        model: "text-embedding-3-small",
+        model: process.env.AI_Embedding_MODEL,
         input: chunk.pageContent
       });
       return {  
@@ -38,3 +40,13 @@ async function getMovies() {
   return data;
 }
 // createAndStoreEmbeddings();
+
+export async function getRecommendation(prompt) {
+  const response = await openai.responses.create({
+    model: process.env.AI_MODEL,
+    instructions: "Based on the user data and watch length, recommend a movie or TV series. Return the recommendation in the following JSON format: { title: string, description: string }",
+    input: prompt,
+  });
+  console.log("OpenAI response:", response);
+  return response.output_text;
+}

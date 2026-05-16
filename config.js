@@ -8,6 +8,7 @@ console.log("OpenAI API key:", process.env.OPENAI_API_KEY);
 if (!process.env.OPENAI_API_KEY) throw new Error("OpenAI API key is missing or invalid.");
 export const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  baseURL: process.env.AI_URL,
   dangerouslyAllowBrowser: true
 });
 

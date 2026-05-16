@@ -16,7 +16,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "langchain": "^1.4.0",
-    "openai": "4.12.3",
+    "openai": "^6.34.0",
     "ws": "^8.20.0"
   },
   "devDependencies": {

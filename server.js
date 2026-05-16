@@ -1,8 +1,7 @@
 import express from "express";
 import cors from "cors";
 import 'dotenv/config';
-import { openai, supabase } from "./config.js";
-import { createAndStoreEmbeddings } from "./chunking.js";
+import { createAndStoreEmbeddings, getRecommendation } from "./openai.js";
 import http from 'http';
 import { stringify } from "querystring";
 
@@ -19,11 +18,11 @@ app.post("/api/recommendation", async (req, res) => {
     const { userData, watchLength } = req.body;
     console.log("Received user data:", userData);
     console.log("Received watch length:", watchLength);
-    const recommendation = {
-      title: "The Shawshank Redemption",
-      description: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency."
-    };
 
+    const prompt = `User data: ${JSON.stringify(userData)}, Watch length: ${watchLength}`;
+
+    const recommendation = await getRecommendation(prompt);
+    console.log("Generated recommendation from OpenAI:", recommendation);
     res.json(recommendation);
   } catch (error) {
     console.error("Error generating recommendation:", error);
@@ -66,7 +65,6 @@ app.post("/api/recommendation", async (req, res) => {
 // });
 
 // await createAndStoreEmbeddings();
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
