@@ -10,12 +10,15 @@ const otherMoodButtons = document.querySelectorAll('#othermood-btn');
 const firstFormContainer = document.querySelector('.first-form-container');
 const secondFormContainer = document.querySelector('.second-form-container');
 const personCount = document.querySelector('#person-count');
+const loader = document.querySelector('#loader');
+const errorHand = document.querySelector('#error')
 
 let userData = {};
 let person = 1;
 let userDataArray = [];
 let initialPerson = 1;
 let watchLength = '';
+const posterPlaceholder = `./assets/image/poster_placeholder.png`;
 
 
 firstForm.addEventListener('submit', async (e) => {
@@ -31,6 +34,7 @@ firstForm.addEventListener('submit', async (e) => {
 
 secondForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+   
     if (person > 1) {
          userData.person = initialPerson;
         initialPerson++;
@@ -45,10 +49,7 @@ secondForm.addEventListener('submit', async (e) => {
         personCount.textContent = initialPerson;
         if (initialPerson > person) {
             secondFormContainer.style.display = 'none';
-            const recommendation = await getRecommendation(userData, watchLength);
-        console.log("Received recommendation:", recommendation);
-        const parsedRecommendation = JSON.parse(recommendation);
-        getPosterImg(parsedRecommendation.title, parsedRecommendation.description);
+            loadRecommendation(userDataArray, watchLength);
         }
     } else {
         const formData = new FormData(secondForm);
@@ -57,10 +58,7 @@ secondForm.addEventListener('submit', async (e) => {
         secondFormContainer.style.display = 'none';
             // resultsSection.innerHTML = resultsHTML;
 
-        const recommendation = await getRecommendation(userData, watchLength);
-        console.log("Received recommendation:", recommendation);
-        const parsedRecommendation = JSON.parse(recommendation);
-         getPosterImg(parsedRecommendation.title, parsedRecommendation.description);
+        loadRecommendation(userData, watchLength);
     }
 });
 
@@ -116,14 +114,18 @@ const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
         // return fullPosterUrl;
          renderResults(title, description, fullPosterUrl);
       } else {
-        console.log(`No poster available for: ${firstMovie.title}`);
+        renderResults(title, description, posterPlaceholder);
       }
     } else {
       console.log('No movies found matching that title.');
+    renderResults(title, description, posterPlaceholder);
     }
   })
-  .catch(error => console.error('Error fetching data:', error));
-
+  .catch(error => {
+    console.error('Error fetching data:', error)
+    loader.style.display = 'none';
+  });
+  
 }
 
 function renderResults(title, description, posterUrl) {
@@ -133,7 +135,34 @@ function renderResults(title, description, posterUrl) {
              <img src="${posterUrl}" alt="${title} poster">
              <p>${description}</p>
              <div class="btn">
-            <button class="btn-next">Next movie</button>
-                </div>
+            <button class="btn-next" onclick="fetchRecommendation()">Next movie</button>
+            </div>
         `;
+        loader.style.display = 'none';
+}
+
+function fetchRecommendation() {
+    resultsSection.innerHTML = ``;
+    if (initialPerson > 1) {
+        loadRecommendation(userDataArray, watchLength);
+    } else {
+        loadRecommendation(userData, watchLength);
+    }
+}
+
+async function loadRecommendation(userData, watchLength) {
+     loader.style.display = 'block';
+    const recommendation = await getRecommendation(userData, watchLength);
+        if (recommendation === null) {
+            console.error("Failed to fetch recommendation.");
+            loader.style.display = 'none';
+            errorHand.innerHTML = `<p>Sorry, we couldn't fetch a recommendation at this time. Please try again later.</p>
+            <div class="btn">
+            <button class="btn-next" onclick="location.reload()">Try Again</button>
+            </div>`;
+            return;
+        }
+        console.log("Received recommendation:", recommendation);
+        const parsedRecommendation = JSON.parse(recommendation);
+        getPosterImg(parsedRecommendation.title, parsedRecommendation.description);
 }

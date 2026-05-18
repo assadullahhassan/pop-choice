@@ -154,3 +154,19 @@ span {
 .second-form-container {
     display: none;
 }
+
+.loader {
+    width: 30%;
+    margin: 2em auto;
+    color: #51E08A;
+    display: none;
+    padding-top: 10em;
+}
+
+.error {
+    padding: 1em 2em;
+}
+
+/* .loader svg {
+    color: #51E08A;
+} */
