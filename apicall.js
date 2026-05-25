@@ -1,7 +1,7 @@
 
 export async function getRecommendation(userData, watchLength, oldRecommendation) {
     try {
-        const response = await fetch('http://localhost:3000/api/recommendation', {
+        const response = await fetch('https://pop-choice-mm29.onrender.com/api/recommendation', {
             method: 'POST',
             headers: {
                     'Content-Type': 'application/json'
@@ -17,6 +17,6 @@ export async function getRecommendation(userData, watchLength, oldRecommendation
 }
 
 export async function getPoster(tvSeriesId) {
-    const response = await fetch(`http://localhost:3000/api/poster?tvSeriesId=${tvSeriesId}`);
+    const response = await fetch(`https://pop-choice-mm29.onrender.com/api/poster?tvSeriesId=${tvSeriesId}`);
     return response.json();
 }
