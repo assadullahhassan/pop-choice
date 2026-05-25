@@ -115,7 +115,7 @@ span {
 
 
 .results {
-  padding: 1em 2em;
+  padding: .5em 2em;
 }
 
 .results img {
@@ -164,9 +164,9 @@ span {
 }
 
 .error {
-    padding: 1em 2em;
+    padding: .5em 2em;
 }
 
-/* .loader svg {
-    color: #51E08A;
-} */
+.hidden {
+    display: none;
+}

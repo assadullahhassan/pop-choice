@@ -1,5 +1,4 @@
-// import { openai, supabase } from './config.js';
-// import { get } from "http";
+
 import { getRecommendation, getPoster } from "./apicall.js";
 
 const firstForm = document.querySelector('#first-form');
@@ -11,13 +10,18 @@ const firstFormContainer = document.querySelector('.first-form-container');
 const secondFormContainer = document.querySelector('.second-form-container');
 const personCount = document.querySelector('#person-count');
 const loader = document.querySelector('#loader');
-const errorHand = document.querySelector('#error')
+const errorHand = document.querySelector('#error');
+const btnFetchRecommendation = document.querySelector('#btn-fetchRecommendation');
+const hiddenBtn = document.querySelector('#hidden-btn');
 
 let userData = {};
 let person = 1;
 let userDataArray = [];
 let initialPerson = 1;
 let watchLength = '';
+let oldRecommendation = [];
+let hasOldRecommendation = false;
+let counter = 0;
 const posterPlaceholder = `./assets/image/poster_placeholder.png`;
 
 
@@ -93,7 +97,7 @@ function clearMoodSelection() {
 
  function getPosterImg(title, description) {
 
-const API_KEY = '';
+const API_KEY = '8a7d70c03917903fa972f668900f8b58';
 
 const url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(title)}`;
 const imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
@@ -134,25 +138,34 @@ function renderResults(title, description, posterUrl) {
             <h1>${title}</h1>
              <img src="${posterUrl}" alt="${title} poster">
              <p>${description}</p>
-             <div class="btn">
-            <button class="btn-next" onclick="fetchRecommendation()">Next movie</button>
-            </div>
         `;
+        hiddenBtn.classList.remove('hidden');
         loader.style.display = 'none';
 }
 
 function fetchRecommendation() {
     resultsSection.innerHTML = ``;
-    if (initialPerson > 1) {
-        loadRecommendation(userDataArray, watchLength);
-    } else {
-        loadRecommendation(userData, watchLength);
+    hiddenBtn.classList.add('hidden');
+     if( counter > 3) {
+            errorHand.innerHTML = `<p>Sorry, you have reached the maximum number of recommendations. Start over.</p>
+                <div class="btn">
+                <button class="btn-next" onclick="location.reload()">Start Over</button>
+                </div>`;
+        } else {
+            if (initialPerson > 1) {
+            loadRecommendation(userDataArray, watchLength);
+        } else {
+            loadRecommendation(userData, watchLength);
+        }
     }
 }
 
+btnFetchRecommendation.addEventListener('click', fetchRecommendation);
+
 async function loadRecommendation(userData, watchLength) {
      loader.style.display = 'block';
-    const recommendation = await getRecommendation(userData, watchLength);
+     counter++;
+    const recommendation = await getRecommendation(userData, watchLength, oldRecommendation);
         if (recommendation === null) {
             console.error("Failed to fetch recommendation.");
             loader.style.display = 'none';
@@ -163,6 +176,16 @@ async function loadRecommendation(userData, watchLength) {
             return;
         }
         console.log("Received recommendation:", recommendation);
-        const parsedRecommendation = JSON.parse(recommendation);
-        getPosterImg(parsedRecommendation.title, parsedRecommendation.description);
+        if (recommendation.error) {
+            console.error("Error in recommendation response:", recommendation.error);
+            loader.style.display = 'none';
+            errorHand.innerHTML = `<p>Sorry, there was an error generating a recommendation. Please try again later.</p>
+            <div class="btn">
+            <button class="btn-next" onclick="location.reload()">Try Again</button>
+            </div>`;
+        } else {
+            const parsedRecommendation = JSON.parse(recommendation);
+            oldRecommendation.push(parsedRecommendation);
+            getPosterImg(parsedRecommendation.title, parsedRecommendation.description);
+        }
 }

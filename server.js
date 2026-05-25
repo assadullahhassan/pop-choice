@@ -15,11 +15,12 @@ app.use(express.json());
 
 app.post("/api/recommendation", async (req, res) => {
   try {
-    const { userData, watchLength } = req.body;
+    const { userData, watchLength, oldRecommendation } = req.body;
     console.log("Received user data:", userData);
     console.log("Received watch length:", watchLength);
+    console.log("Received old recommendation:", oldRecommendation);
 
-    const prompt = `User data: ${JSON.stringify(userData)}, Watch length: ${watchLength}`;
+    const prompt = `User data: ${JSON.stringify(userData)}, Watch length: ${watchLength}, Old recommendation: ${JSON.stringify(oldRecommendation)}`;
 
     const recommendation = await getRecommendation(prompt);
     console.log("Generated recommendation from OpenAI:", recommendation);
@@ -29,7 +30,6 @@ app.post("/api/recommendation", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 // await createAndStoreEmbeddings();
 

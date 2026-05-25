@@ -1,12 +1,12 @@
 
-export async function getRecommendation(userData, watchLength) {
+export async function getRecommendation(userData, watchLength, oldRecommendation) {
     try {
         const response = await fetch('http://localhost:3000/api/recommendation', {
             method: 'POST',
             headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ userData, watchLength })
+                body: JSON.stringify({ userData, watchLength, oldRecommendation })
             });
         return response.json();
     } catch (error) {
